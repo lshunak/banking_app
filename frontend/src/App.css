@@ -1,0 +1,93 @@
+/* App.css */
+
+body {
+  margin: 0;
+  font-family: Arial, sans-serif;
+  background-color: #fff;
+  /* White background for the whole page */
+  color: #000;
+  /* Black text color */
+}
+
+.container {
+  max-width: 400px;
+  margin: 0 auto;
+}
+
+.header {
+  background-color: #fff;
+  /* White background for header */
+  color: #000;
+  /* Black text color for header */
+  text-align: center;
+  padding: 2rem;
+  border-bottom: 1px solid #000;
+  /* Thin black border */
+}
+
+.form label {
+  display: block;
+  margin-bottom: 10px;
+}
+
+.form input {
+  width: 100%;
+  padding: 10px;
+  margin-top: 5px;
+  margin-bottom: 15px;
+  box-sizing: border-box;
+}
+
+.main {
+  flex: 1;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  padding: 2rem;
+}
+
+.nav {
+  display: flex;
+  gap: 1rem;
+}
+
+.button {
+  background-color: #fff;
+  /* White background for buttons */
+  color: #000;
+  /* Black text color for buttons */
+  padding: 1rem 2rem;
+  text-decoration: none;
+  border: 1px solid #000;
+  /* Black border for buttons */
+  border-radius: 5px;
+  font-weight: bold;
+  display: inline-block;
+  transition: background-color 0.3s, color 0.3s;
+}
+
+.button:hover {
+  background-color: #000;
+  /* Black background on hover */
+  color: #fff;
+  /* White text color on hover */
+}
+
+.footer {
+  background-color: #fff;
+  /* White background for footer */
+  color: #000;
+  /* Black text color for footer */
+  text-align: center;
+  padding: 1rem;
+  border-top: 1px solid #000;
+  /* Thin black border */
+}
+
+.error-message {
+  color: red;
+}
+
+.success-message {
+  color: green;
+}

@@ -1,0 +1,195 @@
+openapi: 3.0.0
+info:
+  title: Banking App API
+  version: 1.0.0
+  description: API for banking web app
+paths:
+  /authentication/signup:
+    post:
+      summary: User Sign Up
+      description: Create a new user
+      requestBody:
+        description: User sign up details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username for the new user
+                password:
+                  type: string
+                  description: Password for the new user
+                email:
+                  type: string
+                  description: Email for the new user
+              required:
+                - username
+                - password
+                - email
+      responses:
+        '200':
+          description: User created successfully
+        '409':
+          description: User already exists
+        '500':
+          description: Server error
+
+  /authentication/signin:
+    post:
+      summary: User Sign In
+      description: Authenticate a user and provide a token
+      requestBody:
+        description: User sign in details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                username:
+                  type: string
+                  description: Username of the user
+                password:
+                  type: string
+                  description: Password of the user
+      responses:
+        '200':
+          description: Successfully signed in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  token:
+                    type: string
+                    description: JWT token for authenticated user
+        '404':
+          description: User not found
+        '400':
+          description: Invalid credentials
+        '500':
+          description: Server error
+
+  /authentication/verify-email:
+    get:
+      summary: Verify user email
+      parameters:
+        - name: token
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Email verified successfully
+        '400':
+          description: Invalid or expired token
+        '500':
+          description: Server error
+
+/account/create:
+    post:
+      summary: Create a new account
+      description: Create a new account for a user
+      requestBody:
+        description: Account details
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                user_id:
+                  type: string
+                  description: ID of the user owning the account
+                account_number:
+                  type: string
+                  description: Account number
+                balance:
+                  type: number
+                  description: Account balance
+              required:
+                - user_id
+                - account_number
+                - balance
+      responses:
+        '200':
+          description: Account created successfully
+        '500':
+          description: Server error
+
+/account/balance{account_number}:
+    get:
+      summary: Get account balance
+      description: Get the balance of an account
+      parameters:
+        - name: account_number
+          in: query
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Account balance retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  balance:
+                    type: number
+                    format: float
+                    description: Account balance
+        '404':
+          description: Account not found
+        '500':
+          description: Server error
+
+components:
+  schemas:
+    User:
+      type: object
+      properties:
+        username:
+          type: string
+          description: Username of the user
+        email:
+          type: string
+          description: Email of the user
+        is_verified:
+          type: boolean
+          description: Email verification status
+        account:
+          type: array
+          items:
+            type: string
+          description: List of account IDs associated with the user   
+      required:
+        - username
+        - email
+
+    Account:
+      type: object
+      properties:
+        user_id:
+          type: string
+          description: User ID
+        account_number:
+          type: string
+          description: Account number
+        balance:
+          type: number
+          description: Account balance
+      required:
+        - user_id
+        - account_number
+        - balance
+
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
