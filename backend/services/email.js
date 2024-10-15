@@ -15,7 +15,7 @@ const transporter = nodemailer.createTransport({
 // Function to send the verification email
 const sendVerificationEmail = async (user) => {
       
-    const verificationLink = `http://localhost:3000/verify-email?verifyCode=${user.verificationCode}`;
+    const verificationLink = `http://localhost:3000/authentication/verify-email?verifyCode=${user.verificationCode}`;
 
     const mailOptions = {
         from: process.env.EMAIL,

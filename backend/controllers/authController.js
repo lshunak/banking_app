@@ -82,7 +82,7 @@ exports.signin = async (req, res) => {
         );
 
         // Send a basic response
-        res.status(200).json({ message: 'Signin successful', token, userId: user._id });
+        res.status(200).json({ message: 'Signin successful', token});
         
     } catch (error) {
         res.status(500).json({ message: 'Server error', error });

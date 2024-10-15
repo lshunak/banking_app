@@ -5,11 +5,11 @@ const cors = require('cors');
 const bodyParser = require('body-parser'); // Parse incoming request bodies in a middleware
 const YAML = require('yamljs'); 
 const swaggerUi = require('swagger-ui-express');
-const path = require('path'); // Node.js path module
+const path = require('path'); // path module to work with file and directory paths
 require('dotenv').config(); // Load environment variables
 
 // Import routes
-const authRoutes = require('./routes/authentication');
+const authRoutes = require('./routes/authentication'); 
 const dashboardRoutes = require('./routes/user');
 const accountRoutes = require('./routes/account');
 
@@ -17,15 +17,15 @@ const accountRoutes = require('./routes/account');
 const app = express();
 
 // Middleware setup
-app.use(cors()); // Enable Cross-Origin Resource Sharing
-app.use(bodyParser.json()); // Parse JSON bodies
+app.use(cors()); // Enable Cross-Origin Resource Sharing (for frontend to access backend)
+app.use(bodyParser.json()); // Parse JSON bodies, to get data from POST requests
 
 // Serve Swagger UI
 const swaggerDocument = YAML.load(path.join(__dirname, 'swagger', 'swagger.yaml'));
-app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument));
+app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); // makes the Swagger UI accessible at the /api-docs URL path.
 
 
-// Use routes with /authentication prefix
+// Routes. Middleware to handle requests
 app.use('/authentication', authRoutes); // Routes for authentication
 app.use('/user', dashboardRoutes); // Routes for user dashboard
 app.use('/account', accountRoutes); // Routes for account
@@ -38,7 +38,7 @@ mongoose.connect(process.env.MONGODB_URI)
     .catch(err => console.error('MongoDB connection error:', err));
 
 // Start server
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 3000;
 app.listen(PORT, () => {
     console.log(`Server running on port ${PORT}`);
 });
