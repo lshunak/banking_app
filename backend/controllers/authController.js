@@ -2,7 +2,7 @@ const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
 const User = require('../models/user');
 const { sendVerificationEmail, generateVerificationCode } = require('../services/email');
-const { createAccount } = require('../controllers/accountController'); // Import createAccount function
+const { createAccountForUser } = require('../services/accountService'); // Import account utility
 
 // Signup function
 exports.signup = async (req, res) => {
@@ -27,7 +27,7 @@ exports.signup = async (req, res) => {
         // Send verification email
         sendVerificationEmail(newUser);
 
-        createAccount(newUser._id); // Create a new account for the user
+        await createAccountForUser(newUser._id);
 
         res.status(200).json({ message: 'Signup successful! Please verify your email.'});
         
@@ -81,10 +81,15 @@ exports.signin = async (req, res) => {
             { expiresIn: '1h' } // Expiration time
         );
 
-        // Send a basic response
-        res.status(200).json({ message: 'Signin successful', token});
+        // Send the token along with a message and token expiration info
+        res.status(200).json({
+            message: 'Signin successful',
+            token,
+            expiresIn: 3600 // 1 hour (in seconds)
+        });
         
     } catch (error) {
+        console.error('Signin error:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };

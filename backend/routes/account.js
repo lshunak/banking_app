@@ -1,11 +1,15 @@
 const express = require('express');
 const router = express.Router();
 const accountController = require('../controllers/accountController');
+const { authenticateToken } = require('../middlewares/authMiddleware'); // JWT authentication middleware
 
-// Route to create a new account
-router.post('/create', accountController.createAccount);
+router.use(authenticateToken);
 
-// Route to get the account balance
-router.get('/balance/:accountId', accountController.getBalance);
+
+// Route to create a new account 
+router.post('/',  accountController.createAccount);
+
+// Route to get the account balance 
+router.get('/balance/:accountNumber',  accountController.getBalance);
 
 module.exports = router;

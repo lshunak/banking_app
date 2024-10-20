@@ -2,44 +2,38 @@
 const Account = require('../models/account');
 const User = require('../models/user'); // Import the User model if needed
 
-// Fetch all accounts for a specific user
-const getAccounts = async (userId) => {
+// Get User Profile
+exports.getUserProfile = async (req, res) => {
     try {
-        return await Account.find({ userId }).exec();
+        const userId = req.user.userId; // Use req.user.userId consistently from JWT
+        const user = await User.findById(userId).select('-password'); // Exclude password field
+
+        if (!user) {
+            return res.status(404).json({ message: 'User not found' });
+        }
+
+        res.status(200).json(user);
     } catch (error) {
-        throw new Error('Failed to fetch accounts');
+        console.error('Error fetching user profile:', error); // Log the error
+        res.status(500).json({ message: 'Error fetching user profile' });
     }
 };
 
-
-// Handle user dashboard data
-const getUserDashboard = async (req, res) => {
+// Get User's Accounts
+exports.getUserAccounts = async (req, res) => {
     try {
-        const userId = req.user.userId; // Get user ID from request
-        const accounts = await getAccounts(userId);
+        const userId = req.user.userId; // Use req.user.userId consistently
 
-        res.status(200).json({
-            userId,
-            accounts
-        });
-    } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch user dashboard data' });
-    }
-};
+        // Find all accounts associated with the authenticated user
+        const accounts = await Account.find({ userId });
 
-// Optionally, define a route to get accounts directly
-const getUserAccounts = async (req, res) => {
-    try {
-        const userId = req.user._id;
-        const accounts = await getAccounts(userId);
+        if (!accounts || accounts.length === 0) {
+            return res.status(404).json({ message: 'No accounts found for this user' });
+        }
 
         res.status(200).json({ accounts });
     } catch (error) {
-        res.status(500).json({ error: 'Failed to fetch accounts' });
+        console.error('Error fetching accounts:', error); // Log the error
+        res.status(500).json({ message: 'Failed to fetch accounts' });
     }
-};
-
-module.exports = {
-    getUserDashboard,
-    getUserAccounts
 };

@@ -1,11 +1,14 @@
 const express = require('express');
 const router = express.Router();
-const dashboardController = require('../controllers/userController');
-const authenticateToken = require('../middleware/authMiddleware');
+const userController = require('../controllers/userController');
+const { authenticateToken } = require('../middlewares/authMiddleware'); // JWT authentication middleware
 
-// Route to get dashboard data
-router.get('/dashboard', dashboardController.getUserDashboard);
+router.use(authenticateToken);
 
-router.get('/accounts', authenticateToken, dashboardController.getUserAccounts);
+// Route to get the authenticated user's profile
+router.get('/profile', userController.getProfile);
+
+// Route to get the authenticated user's accounts
+router.get('/accounts', userController.getUserAccounts);
 
 module.exports = router;
