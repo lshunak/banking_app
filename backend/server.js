@@ -12,6 +12,7 @@ require('dotenv').config(); // Load environment variables
 const authRoutes = require('./routes/authentication'); 
 const dashboardRoutes = require('./routes/user');
 const accountRoutes = require('./routes/account');
+const transactionRoutes = require('./routes/transaction');
 
 // Initialize Express app
 const app = express();
@@ -29,6 +30,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); // make
 app.use('/authentication', authRoutes); // Routes for authentication
 app.use('/user', dashboardRoutes); // Routes for user dashboard
 app.use('/account', accountRoutes); // Routes for account
+app.use('/transaction', transactionRoutes); // Routes for account
 
 
 // Connect to MongoDB
