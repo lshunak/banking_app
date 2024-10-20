@@ -1,0 +1,63 @@
+{ 
+    "senderAccount": "67151fa44522fa3ab3492dac",
+    "receiverAccount" : "6715133a936ea42a90ec5d95", 
+    "amount" :  100
+}
+
+{
+    "signup": [
+      {
+        "username": "liran",
+        "password": "123",
+
+
+        "email": "liranshunak@gmail.com"
+      },
+      {
+        "username": "testUser2",
+        "password": "password456",
+        "email": "testuser2@example.com",
+        "phone": "0987654321"
+      }
+    ],
+    "localhost:3000/authentication/signin": [
+      {
+        "username": "liran",
+        "password": "123"
+      },
+      {
+        "username": "testUser2",
+        "password": "wrongPassword"
+      }
+    ],
+    "createAccount": [
+      {
+        "accountNumber": "ACC123456",
+        "initialBalance": 1000
+      },
+      {
+        "accountNumber": "ACC789012",
+        "initialBalance": 500
+      }
+    ],
+    "getBalance": [
+      {
+        "accountNumber": "ACC123456"
+      },
+      {
+        "accountNumber": "ACC789012"
+      },
+      {
+        "accountNumber": "NON_EXISTENT_ACC"
+      }
+    ],
+    "getUserAccounts": [
+      {
+        "username": "testUser1"
+      },
+      {
+        "username": "testUser2"
+      }
+    ]
+  }
+  

@@ -8,14 +8,14 @@ const generateAccountNumber = () => {
 };
 
 // Function to create an account
-const createAccountForUser = async (userId) => {
+const createAccountForUser = async (userId, initialBalance) => {
     const accountNumber = generateAccountNumber(); // Generate a new account number
 
     // Create a new account
     const newAccount = new Account({
-        userId, // Attach the authenticated user's ID to the account
-        accountNumber,
-        balance: 0 // Default balance to 0
+        userId: userId, // Make sure to assign userId here
+        accountNumber: generateAccountNumber(), // Assuming this is your logic to generate account number
+        balance: initialBalance 
     });
 
     // Save the new account to the database

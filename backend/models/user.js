@@ -12,4 +12,4 @@ const userSchema = new Schema({
     verificationCodeExpires: { type: Date }, // Expiration time for the code */
 });
 
-module.exports = mongoose.model('Users', userSchema);
+module.exports = mongoose.model('User', userSchema);

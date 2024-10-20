@@ -1,9 +1,11 @@
 const Transaction = require('../models/transaction');
 const Account = require('../models/account');
+const User = require('../models/user');
 
 // Create a new transaction
 exports.createTransaction = async (req, res) => {
     const { senderAccount, receiverAccount, amount } = req.body;
+    const userId = req.user.userId; // Assuming req.user is set by the authentication middleware
 
     try {
         // Validate accounts and amount (you can add more validation as needed)
@@ -17,7 +19,7 @@ exports.createTransaction = async (req, res) => {
 
         // Create the transaction
         const transaction = new Transaction({
-            userId: req.user.id, // assuming req.user is set by the authentication middleware
+            userId: userId, // assuming req.user is set by the authentication middleware
             senderAccount,
             receiverAccount,
             amount,
@@ -29,7 +31,7 @@ exports.createTransaction = async (req, res) => {
         // Update sender and receiver balances
         sender.balance -= amount;
         receiver.balance += amount;
-        
+
         await sender.save();
         await receiver.save();
 

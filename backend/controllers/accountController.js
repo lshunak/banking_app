@@ -5,10 +5,10 @@ const { createAccountForUser } = require('../services/accountService'); // Impor
 
 exports.createAccount = async (req, res) => {
     try {
-        const userId = req.user._id; // Get the user ID from the authenticated user
-
+        const userId = req.user.userId; // Get the user ID from the authenticated user
+        const initialBalance = req.body.initialBalance;
         // Call the utility function to create an account for the user
-        const newAccount = await createAccountForUser(userId);
+        const newAccount = await createAccountForUser(userId, initialBalance);
 
         // Send a success response
         res.status(201).json({ message: 'Account created successfully', account: newAccount });
