@@ -30,11 +30,11 @@ paths:
                 - password
                 - email
       responses:
-        '200':
+        "200":
           description: User created successfully
-        '409':
+        "400":
           description: User already exists
-        '500':
+        "500":
           description: Server error
 
   /authentication/signin:
@@ -56,7 +56,7 @@ paths:
                   type: string
                   description: Password of the user
       responses:
-        '200':
+        "200":
           description: Successfully signed in
           content:
             application/json:
@@ -66,73 +66,111 @@ paths:
                   token:
                     type: string
                     description: JWT token for authenticated user
-        '404':
+        "404":
           description: User not found
-        '400':
+        "400":
           description: Invalid credentials
-        '500':
+        "403":
+          description: User not verified
+        "500":
           description: Server error
 
   /authentication/verify-email:
     get:
       summary: Verify user email
       parameters:
-        - name: token
+        - name: verifyCode
           in: query
           required: true
+          description: Verification code sent to the user's email
           schema:
             type: string
       responses:
-        '200':
-          description: Email verified successfully
-        '400':
-          description: Invalid or expired token
-        '500':
+        "200":
+          description: Email verified successfully, redirecting to sign in
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  redirect:
+                    type: string
+                    description: URL to redirect the user to sign in
+        "404":
+          description: User not found
+        "500":
           description: Server error
-
-/account/create:
+  /account/:
     post:
       summary: Create a new account
       description: Create a new account for a user
+      tags:
+        - Accounts
+      security:
+        - bearerAuth: []
       requestBody:
-        description: Account details
+        description: Account details (initial balance)
         required: true
         content:
           application/json:
             schema:
               type: object
               properties:
-                user_id:
-                  type: string
-                  description: ID of the user owning the account
-                account_number:
-                  type: string
-                  description: Account number
-                balance:
+                initialBalance:
                   type: number
-                  description: Account balance
+                  description: initial balance for the new account
               required:
-                - user_id
-                - account_number
-                - balance
+                - initialBalance
       responses:
-        '200':
+        "201":
           description: Account created successfully
-        '500':
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Account created successfully
+                  account:
+                    type: object
+                    properties:
+                      accountNumber:
+                        type: string
+                        description: The generated account number
+                      balance:
+                        type: number
+                        description: The initial balance of the account
+        "500":
           description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Failed to create account"
+                  error:
+                    type: string
+                    description: Error message
 
-/account/balance{account_number}:
+  /account/balance/{accountNumber}:
     get:
       summary: Get account balance
       description: Get the balance of an account
+      tags:
+        - Accounts
+      security:
+        - bearerAuth: []
       parameters:
-        - name: account_number
-          in: query
+        - name: accountNumber
+          in: path
           required: true
           schema:
             type: string
       responses:
-        '200':
+        "200":
           description: Account balance retrieved successfully
           content:
             application/json:
@@ -143,10 +181,161 @@ paths:
                     type: number
                     format: float
                     description: Account balance
-        '404':
-          description: Account not found
-        '500':
+        "404":
+          description: Account not found or no access to this account
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Account not found or you do not have access to this account"
+        "500":
           description: Server error
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: "Failed to fetch balance"
+
+  /user/profile:
+    get:
+      summary: Get authenticated user's profile
+      tags:
+        - User
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: User profile retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  username:
+                    type: string
+                    description: Username of the user
+                  email:
+                    type: string
+                    description: Email of the user
+                  phone:
+                    type: string
+                    description: Phone number of the user
+        "404":
+          description: User not found
+        "500":
+          description: Server error
+  /user/accounts:
+    get:
+      summary: Get authenticated user's accounts
+      tags:
+        - User
+        - Accounts
+      security:
+        - bearerAuth: []
+      responses:
+        "200":
+          description: Accounts retrieved successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  accounts:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        accountNumber:
+                          type: string
+                          description: The user's account number
+                        balance:
+                          type: number
+                          description: Account balance
+        "404":
+          description: No accounts found for the user
+        "500":
+          description: Server error
+  /transaction/create:
+    post:
+      summary: Create a new transaction
+      tags:
+        - Transaction
+      security:
+        - bearerAuth: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                senderAccount:
+                  type: string
+                  description: ID of the sender account
+                receiverAccount:
+                  type: string
+                  description: ID of the receiver account
+                amount:
+                  type: number
+                  description: Transaction amount
+              required:
+                - senderAccount
+                - receiverAccount
+                - amount
+      responses:
+        "201":
+          description: Transaction created successfully
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  message:
+                    type: string
+                    example: Transaction created successfully
+                  transaction:
+                    $ref: "#/components/schemas/Transaction"
+        "400":
+          description: Invalid input
+        "404":
+          description: Sender or receiver account not found
+        "500":
+          description: Server error
+
+  /transaction/list/{accountId}:
+    get:
+      summary: Get transactions for a specific account
+      tags:
+        - Transaction
+      security:
+        - bearerAuth: []
+      parameters:
+        - in: path
+          name: accountId
+          required: true
+          schema:
+            type: string
+          description: The account ID
+      responses:
+        "200":
+          description: List of transactions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: "#/components/schemas/Transaction"
+        "404":
+          description: Account or transactions not found
+        "500":
+          description: Server error
+
 
 components:
   schemas:
@@ -166,11 +355,10 @@ components:
           type: array
           items:
             type: string
-          description: List of account IDs associated with the user   
+          description: List of account IDs associated with the user
       required:
         - username
         - email
-
     Account:
       type: object
       properties:
@@ -187,6 +375,21 @@ components:
         - user_id
         - account_number
         - balance
+    Transaction:
+      type: object
+      properties:
+        senderAccount:
+          type: string
+          description: ID of the sender account
+        receiverAccount:
+          type: string
+          description: ID of the receiver account
+        amount:
+          type: number
+          description: Transaction amount
+        userId:
+          type: string
+          description: User ID related to the transaction
 
   securitySchemes:
     bearerAuth:

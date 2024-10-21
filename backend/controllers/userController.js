@@ -1,11 +1,11 @@
 //  userController.js
 const Account = require('../models/account');
-const User = require('../models/user'); // Import the User model if needed
+const User = require('../models/user'); 
 
 // Get User Profile
 exports.getUserProfile = async (req, res) => {
     try {
-        const userId = req.user.userId; // Use req.user.userId consistently from JWT
+        const userId = req.user.userId; 
         const user = await User.findById(userId).select('-password'); // Exclude password field
 
         if (!user) {
@@ -22,7 +22,7 @@ exports.getUserProfile = async (req, res) => {
 // Get User's Accounts
 exports.getUserAccounts = async (req, res) => {
     try {
-        const userId = req.user.userId; // Use req.user.userId consistently
+        const userId = req.user.userId; 
 
         // Find all accounts associated with the authenticated user
         const accounts = await Account.find({ userId });

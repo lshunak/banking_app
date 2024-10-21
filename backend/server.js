@@ -10,7 +10,7 @@ require('dotenv').config(); // Load environment variables
 
 // Import routes
 const authRoutes = require('./routes/authentication'); 
-const dashboardRoutes = require('./routes/user');
+const userRoutes = require('./routes/user');
 const accountRoutes = require('./routes/account');
 const transactionRoutes = require('./routes/transaction');
 
@@ -28,7 +28,7 @@ app.use('/api-docs', swaggerUi.serve, swaggerUi.setup(swaggerDocument)); // make
 
 // Routes. Middleware to handle requests
 app.use('/authentication', authRoutes); // Routes for authentication
-app.use('/user', dashboardRoutes); // Routes for user dashboard
+app.use('/user', userRoutes); // Routes for user dashboard
 app.use('/account', accountRoutes); // Routes for account
 app.use('/transaction', transactionRoutes); // Routes for account
 
