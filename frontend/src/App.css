@@ -21,7 +21,7 @@ body {
   /* Black text color for header */
   text-align: center;
   padding: 2rem;
-  border-bottom: 1px solid #000;
+  
   /* Thin black border */
 }
 
@@ -52,14 +52,13 @@ body {
 }
 
 .button {
-  background-color: #fff;
+  background-color: #603777;
   /* White background for buttons */
-  color: #000;
+  color: #ffffff;
   /* Black text color for buttons */
-  padding: 1rem 2rem;
+  padding: 1rem 1.5rem;
   text-decoration: none;
-  border: 1px solid #000;
-  /* Black border for buttons */
+  border: 2px solid #361c45;
   border-radius: 5px;
   font-weight: bold;
   display: inline-block;
@@ -67,9 +66,10 @@ body {
 }
 
 .button:hover {
-  background-color: #000;
+  background-color: #603777;
+  opacity: 0.7;
   /* Black background on hover */
-  color: #fff;
+  color: #ffffff;
   /* White text color on hover */
 }
 

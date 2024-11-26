@@ -1,12 +1,13 @@
+// pages/HomePage.tsx
 import React from 'react';
 import { Link } from 'react-router-dom';
-import '../App.css'; // Import the CSS file
+import '../App.css';
 
 function HomePage() {
     return (
         <div className="container">
             <header className="header">
-                <h1>Welcome to Liran's Banking App</h1>
+                <h1>Welcome to LS Banking Servises </h1>
             </header>
             <main className="main">
                 <nav className="nav">

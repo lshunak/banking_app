@@ -16,12 +16,12 @@ const VerifyEmailPage = () => {
 
             if (verifyCode) {
                 try {
-                    const response = await axios.get(`http://localhost:5000/authentication/verify-email?verifyCode=${verifyCode}`);
+                    const response = await axios.get(`http://localhost:3000/authentication/verify-email?verifyCode=${verifyCode}`);
                     setMessage(response.data.message);
                     setLoading(false);
                     setTimeout(() => navigate('/signin'), 3000); // Redirect to signin after a short delay
                 } catch (error) {
-                    setMessage(error.response?.data?.message || 'Verification failed');
+                    setMessage('Verification failed');
                     setLoading(false);
                 }
             } else {

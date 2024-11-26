@@ -1,9 +1,9 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import axios from 'axios';
+import { signin } from '../api'; // Import the signIn function from api.ts
 import '../App.css';
 
-function SignInPage() {
+const SignInPage = () => {
     const [formData, setFormData] = useState({
         username: '',
         password: ''
@@ -11,7 +11,7 @@ function SignInPage() {
     const [error, setError] = useState('');
     const navigate = useNavigate();
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -19,37 +19,15 @@ function SignInPage() {
         });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            // Send signin data to backend
-            const response = await axios.post('http://localhost:5000/authentication/signin', formData);
-            const { token,  userId} = response.data;
-
-            // Save the JWT token, e.g., in localStorage
+            const { token } = await signin(formData);
             localStorage.setItem('token', token);
-
-            // Redirect to dashboard after successful sign in
             navigate('/dashboard');
-
         } catch (error) {
             console.error('Error signing in:', error);
-
-            if (error.response && error.response.data) {
-                // Handle specific errors based on response from backend
-                if (error.response.status === 404) {
-                    setError('User not found');
-                } else if (error.response.status === 400) {
-                    setError('Invalid credentials');
-                } else if (error.response.status === 403) {
-                    setError('Email not verified. Please check your email.');
-                } else {
-                    setError('An unexpected error occurred. Please try again.');
-                }
-            } else {
-                // Handle network errors or other unexpected errors
-                setError('Unable to connect to the server. Please check your network connection.');
-            }
+            setError('An unexpected error occurred. Please try again.');
         }
     };
 
@@ -88,6 +66,6 @@ function SignInPage() {
             </main>
         </div>
     );
-}
+};
 
 export default SignInPage;

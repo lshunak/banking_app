@@ -1,18 +1,19 @@
 import React, { useState } from 'react';
-import axios from 'axios';
+import { useNavigate } from 'react-router-dom';
+import { signup } from '../api'; // Import the signUp function from api.ts
 import '../App.css';
 
-function SignUpPage() {
+const SignUpPage = () => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
         email: '',
+        phone: ''
     });
-
     const [error, setError] = useState('');
-    const [successMessage, setSuccessMessage] = useState('');
+    const navigate = useNavigate();
 
-    const handleChange = (e) => {
+    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
         const { name, value } = e.target;
         setFormData({
             ...formData,
@@ -20,19 +21,14 @@ function SignUpPage() {
         });
     };
 
-    const handleSubmit = async (e) => {
+    const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
         try {
-            // Send signup data to backend
-            await axios.post('http://localhost:5000/authentication/signup', formData);
-
-            // Show success message
-            setError('');
-            setSuccessMessage('Registration successful! Please check your email for a verification link.');
+            await signup(formData);
+            navigate('/signin');
         } catch (error) {
             console.error('Error signing up:', error);
-            // Set error message to state
-            setError('User already exists or invalid data');
+            setError(  'An unexpected error occurred. Please try again.');
         }
     };
 
@@ -73,15 +69,24 @@ function SignUpPage() {
                             required
                         />
                     </label>
+                    <label>
+                        Phone:
+                        <input
+                            type="text"
+                            name="phone"
+                            value={formData.phone}
+                            onChange={handleChange}
+                            required
+                        />
+                    </label>
                     <button type="submit" className="button">
                         Sign Up
                     </button>
                     {error && <p className="error-message">{error}</p>}
-                    {successMessage && <p className="success-message">{successMessage}</p>}
                 </form>
             </main>
         </div>
     );
-}
+};
 
 export default SignUpPage;
