@@ -27,7 +27,7 @@ exports.signup = async (req, res) => {
         // Send verification email
         sendVerificationEmail(newUser);
 
-        await createAccountForUser(newUser._id);
+        await createAccountForUser(newUser._id, 1000);
 
         res.status(200).json({ message: 'Signup successful! Please verify your email.'});
         

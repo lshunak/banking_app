@@ -223,9 +223,9 @@ paths:
                   email:
                     type: string
                     description: Email of the user
-                  phone:
-                    type: string
-                    description: Phone number of the user
+                  is_verified: 
+                    type: boolean
+                    description: Email verification status
         "404":
           description: User not found
         "500":

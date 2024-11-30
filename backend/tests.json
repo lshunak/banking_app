@@ -1,63 +1,117 @@
-{ 
-    "senderAccount": "67151fa44522fa3ab3492dac",
-    "receiverAccount" : "6715133a936ea42a90ec5d95", 
-    "amount" :  100
-}
-
 {
-    "signup": [
-      {
-        "username": "liran",
-        "password": "123",
-
-
-        "email": "liranshunak@gmail.com"
+  "steps": [
+    {
+      "description": "Sign in to retrieve JWT token",
+      "request": {
+        "method": "POST",
+        "url": "/authentication/signin",
+        "body": {
+          "username": "liran",
+          "password": "123"
+        }
       },
-      {
-        "username": "testUser2",
-        "password": "password456",
-        "email": "testuser2@example.com",
-        "phone": "0987654321"
+      "expectedResponse": {
+        "status": 200,
+        "body": {
+          "token": "your_generated_jwt_token_here"
+        }
       }
-    ],
-    "localhost:3000/authentication/signin": [
-      {
-        "username": "liran",
-        "password": "123"
+    },
+    {
+      "description": "Retrieve balance for account 67151fa44522fa3ab3492dab",
+      "request": {
+        "method": "GET",
+        "url": "/account/balance/67151fa44522fa3ab3492dab",
+        "headers": {
+          "Authorization": "Bearer your_generated_jwt_token_here"
+        }
       },
-      {
-        "username": "testUser2",
-        "password": "wrongPassword"
+      "expectedResponse": {
+        "status": 200,
+        "body": {
+          "balance": 1500.00
+        }
       }
-    ],
-    "createAccount": [
-      {
-        "accountNumber": "ACC123456",
-        "initialBalance": 1000
+    },
+    {
+      "description": "Retrieve balance for account 6715133a936ea42a90ec5d94",
+      "request": {
+        "method": "GET",
+        "url": "/account/balance/6715133a936ea42a90ec5d94",
+        "headers": {
+          "Authorization": "Bearer your_generated_jwt_token_here"
+        }
       },
-      {
-        "accountNumber": "ACC789012",
-        "initialBalance": 500
+      "expectedResponse": {
+        "status": 200,
+        "body": {
+          "balance": 3000.00
+        }
       }
-    ],
-    "getBalance": [
-      {
-        "accountNumber": "ACC123456"
+    },
+    {
+      "description": "Retrieve balance for account 671519ef9357c62c5418db95",
+      "request": {
+        "method": "GET",
+        "url": "/account/balance/671519ef9357c62c5418db95",
+        "headers": {
+          "Authorization": "Bearer your_generated_jwt_token_here"
+        }
       },
-      {
-        "accountNumber": "ACC789012"
-      },
-      {
-        "accountNumber": "NON_EXISTENT_ACC"
+      "expectedResponse": {
+        "status": 200,
+        "body": {
+          "balance": 2500.00
+        }
       }
-    ],
-    "getUserAccounts": [
-      {
-        "username": "testUser1"
+    },
+    {
+      "description": "Create a transaction from account 6715133a936ea42a90ec5d94 to account 671519ef9357c62c5418db95",
+      "request": {
+        "method": "POST",
+        "url": "/transaction/create",
+        "headers": {
+          "Authorization": "Bearer your_generated_jwt_token_here"
+        },
+        "body": {
+          "senderAccount": "6715133a936ea42a90ec5d94",
+          "receiverAccount": "671519ef9357c62c5418db95",
+          "amount": 200.00
+        }
       },
-      {
-        "username": "testUser2"
+      "expectedResponse": {
+        "status": 201,
+        "body": {
+          "message": "Transaction created successfully",
+          "transaction": {
+            "senderAccount": "6715133a936ea42a90ec5d94",
+            "receiverAccount": "671519ef9357c62c5418db95",
+            "amount": 200.00
+          }
+        }
       }
-    ]
-  }
-  
+    },
+    {
+      "description": "Retrieve transactions for account 6715133a936ea42a90ec5d94",
+      "request": {
+        "method": "GET",
+        "url": "/transaction/list/6715133a936ea42a90ec5d94",
+        "headers": {
+          "Authorization": "Bearer your_generated_jwt_token_here"
+        }
+      },
+      "expectedResponse": {
+        "status": 200,
+        "body": {
+          "transactions": [
+            {
+              "senderAccount": "6715133a936ea42a90ec5d94",
+              "receiverAccount": "671519ef9357c62c5418db95",
+              "amount": 200.00
+            }
+          ]
+        }
+      }
+    }
+  ]
+}
