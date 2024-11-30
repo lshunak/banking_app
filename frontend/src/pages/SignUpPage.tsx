@@ -7,8 +7,7 @@ const SignUpPage = () => {
     const [formData, setFormData] = useState({
         username: '',
         password: '',
-        email: '',
-        phone: ''
+        email: ''
     });
     const [error, setError] = useState('');
     const navigate = useNavigate();
@@ -69,16 +68,7 @@ const SignUpPage = () => {
                             required
                         />
                     </label>
-                    <label>
-                        Phone:
-                        <input
-                            type="text"
-                            name="phone"
-                            value={formData.phone}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
+                    
                     <button type="submit" className="button">
                         Sign Up
                     </button>

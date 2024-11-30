@@ -1,49 +1,23 @@
-import React, { useEffect, useState } from 'react';
-import { getUserInfo } from '../api';
+import React from 'react';
 
-type UserInfo = {
+type UserData = {
     username: string;
     email: string;
-    phone: string;
+};
+
+const mockUser: UserData = {
+    username: "John Doe",
+    email: "john.doe@example.com",
 };
 
 const UserInfo: React.FC = () => {
-    const [userInfo, setUserInfo] = useState<UserInfo | null>(null);
-    const [error, setError] = useState<string>('');
-
-    useEffect(() => {
-        const fetchUserInfo = async () => {
-            try {
-                const token = localStorage.getItem('token'); 
-                if (!token) {
-                    setError('User is not authenticated');
-                    return;
-                }
-
-                const data = await getUserInfo(token);
-                setUserInfo(data);
-            } catch (err) {
-                console.error(err);
-                setError('Failed to fetch user information');
-            }
-        };
-
-        fetchUserInfo();
-    }, []);
-
-    if (error) {
-        return <p className="error-message">{error}</p>;
-    }
-
-    if (!userInfo) {
-        return <p>Loading...</p>;
-    }
-
     return (
         <div className="user-info">
-            <p><strong>Username:</strong> {userInfo.username}</p>
-            <p><strong>Email:</strong> {userInfo.email}</p>
-            <p><strong>Phone:</strong> {userInfo.phone}</p>
+            <h2>Profile Information</h2>
+            <div className="user-details">
+                <p><strong>Username:</strong> {mockUser.username}</p>
+                <p><strong>Email:</strong> {mockUser.email}</p>
+            </div>
         </div>
     );
 };

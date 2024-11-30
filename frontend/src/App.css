@@ -21,38 +21,86 @@ body {
   /* Black text color for header */
   text-align: center;
   padding: 2rem;
-  
+  border-bottom: 1px solid #000;
   /* Thin black border */
 }
 
-.form label {
-  display: block;
-  margin-bottom: 10px;
-}
-
-.form input {
+.accounts-table {
   width: 100%;
-  padding: 10px;
-  margin-top: 5px;
-  margin-bottom: 15px;
-  box-sizing: border-box;
+  border-collapse: collapse;
+  margin-top: 20px;
+  background: white;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
 }
 
-.main {
-  flex: 1;
-  display: flex;
-  justify-content: center;
-  align-items: center;
-  padding: 2rem;
+.accounts-table th,
+.accounts-table td {
+  padding: 12px;
+  text-align: left;
+  border-bottom: 1px solid #eee;
 }
 
-.nav {
-  display: flex;
-  gap: 1rem;
+.accounts-table th {
+  background-color: #f8f9fa;
+  font-weight: bold;
 }
 
+.accounts-table .balance {
+  text-align: right;
+  font-family: monospace;
+  font-weight: bold;
+}
+
+/* Add Dashboard specific styles */
+.dashboard {
+  padding: 20px;
+  max-width: 1200px;
+  margin: 0 auto;
+}
+
+/* Account components */
+.accounts-section {
+  margin: 20px 0;
+}
+
+.accounts-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+.account-card {
+  background: white;
+  padding: 20px;
+  border-radius: 8px;
+  box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+  border: 1px solid #eee;
+}
+
+/* Transaction components */
+.transaction-list {
+  margin-top: 20px;
+}
+
+.transaction-item {
+  display: grid;
+  grid-template-columns: auto 1fr auto;
+  gap: 20px;
+  padding: 12px;
+  border-bottom: 1px solid #eee;
+}
+
+.transaction-amount.credit {
+  color: #28a745;
+}
+
+.transaction-amount.debit {
+  color: #dc3545;
+}
+
+/* Button styles - keep existing and extend */
 .button {
-  background-color: #603777;
+  background-color: #361c45;
   /* White background for buttons */
   color: #ffffff;
   /* Black text color for buttons */
