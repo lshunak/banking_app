@@ -1,13 +1,11 @@
 import React from 'react';
-import Header from '../components/Header';
-import UserInfo from '../components/UserInfo';
-import AccountList from '../components/AccountList';
-import TransactionList from '../components/TransactionList';
+import UserInfo from '../../components/UserInfo/UserInfo';
+import AccountList from '../../components/Account/AccountList';
+import TransactionList from '../../components/Transaction/TransactionList';
 
 const Dashboard: React.FC = () => {
     return (
         <div className="dashboard">
-            <Header />
             <h1>Welcome To your Dashboard</h1>
             <UserInfo />
             <AccountList />

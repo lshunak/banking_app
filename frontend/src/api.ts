@@ -8,30 +8,29 @@ export type SignupData = {
     email: string;
 };
 
-type SigninData = {
+export type SigninData = {
     username: string;
     password: string;
 };
 
-type UserProfileResponse = {
+export type UserProfileResponse = {
     username: string;
     email: string;
-    is_verified: boolean;
 };
 
-type Transaction = {
+export type Transaction = {
     senderAccount: string;
     receiverAccount: string;
     amount: number;
     userId: string;
 };
 
-type AccountResponse = {
+export type AccountResponse = {
     accountNumber: string;
     balance: number;
 };
 
-type CreateAccountResponse = {
+export type CreateAccountResponse = {
     message: string;
     account: {
         accountNumber: string;
@@ -39,7 +38,7 @@ type CreateAccountResponse = {
     };
 };
 
-type TransactionResponse = {
+export type TransactionResponse = {
     message: string;
     transaction: Transaction;
 };

@@ -1,7 +1,7 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signup } from '../api'; // Import the signUp function from api.ts
-import '../App.css';
+import { signup } from '../../api'; // Import the signUp function from api.ts
+import '../../App.css';
 
 const SignUpPage = () => {
     const [formData, setFormData] = useState({
