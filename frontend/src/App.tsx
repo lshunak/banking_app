@@ -6,6 +6,7 @@ import HomePage from './pages/HomePage/HomePage';
 import SignInPage from './pages/SignIn/SignInPage';
 import SignUpPage from './pages/SignUp/SignUpPage';
 import Dashboard from './pages/Dashboard/Dashboard';
+import PrivateRoute from './components/PrivateRoute/PrivateRoute';
 
 const App: React.FC = () => {
     return (
@@ -16,7 +17,14 @@ const App: React.FC = () => {
                     <Route path="/" element={<HomePage />} />
                     <Route path="/signin" element={<SignInPage />} />
                     <Route path="/signup" element={<SignUpPage />} />
-                    <Route path="/dashboard" element={<Dashboard />} />
+                    <Route
+                        path="/dashboard"
+                        element={
+                            <PrivateRoute>
+                                <Dashboard />
+                            </PrivateRoute>
+                        }
+                    />
                 </Routes>
             </Router>
         </AuthProvider>

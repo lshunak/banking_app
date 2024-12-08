@@ -1,33 +1,22 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
-import { signin } from '../../api'; // Import the signIn function from api.ts
+import { useAuth } from '../../contexts/AuthContext';
 import '../../App.css';
 
-const SignInPage = () => {
-    const [formData, setFormData] = useState({
-        username: '',
-        password: ''
-    });
+const SignInPage: React.FC = () => {
+    const [username, setUsername] = useState('');
+    const [password, setPassword] = useState('');
     const [error, setError] = useState('');
+    const { login } = useAuth();
     const navigate = useNavigate();
-
-    const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
-    };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
-        try {
-            const { token } = await signin(formData);
-            localStorage.setItem('token', token);
+        const success = await login(username, password);
+        if (success) {
             navigate('/dashboard');
-        } catch (error) {
-            console.error('Error signing in:', error);
-            setError('An unexpected error occurred. Please try again.');
+        } else {
+            setError('Login failed. Please check your credentials.');
         }
     };
 
@@ -43,8 +32,8 @@ const SignInPage = () => {
                         <input
                             type="text"
                             name="username"
-                            value={formData.username}
-                            onChange={handleChange}
+                            value={username}
+                            onChange={(e) => setUsername(e.target.value)}
                             required
                         />
                     </label>
@@ -53,8 +42,8 @@ const SignInPage = () => {
                         <input
                             type="password"
                             name="password"
-                            value={formData.password}
-                            onChange={handleChange}
+                            value={password}
+                            onChange={(e) => setPassword(e.target.value)}
                             required
                         />
                     </label>

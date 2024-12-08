@@ -8,10 +8,15 @@ export type SignupData = {
     email: string;
 };
 
+export type VerifyEmailData = {
+    token: string;
+};
+
 export type SigninData = {
     username: string;
     password: string;
 };
+
 
 export type UserProfileResponse = {
     username: string;
@@ -42,7 +47,7 @@ export type TransactionResponse = {
     message: string;
     transaction: Transaction;
 };
-
+/* 
 // Error handling helper
 const handleResponseError = (status: number): string => {
     switch (status) {
@@ -58,25 +63,22 @@ const handleResponseError = (status: number): string => {
             return 'Server error';
     }
 };
-
+ */
 // Base API client
 const apiClient = async <T>(
     endpoint: string,
+    token: string,
     options: {
         method?: string;
-        token?: string;
         body?: any;
     } = {}
 ): Promise<T> => {
-    const { method = 'GET', token, body } = options;
+    const { method = 'GET', body } = options;
 
     const headers: Record<string, string> = {
         'Content-Type': 'application/json',
+        'Authorization': `Bearer ${token}`,
     };
-
-    if (token) {
-        headers.Authorization = `Bearer ${token}`;
-    }
 
     const response = await fetch(`${API_BASE_URL}${endpoint}`, {
         method,
@@ -85,41 +87,76 @@ const apiClient = async <T>(
     });
 
     if (!response.ok) {
-        throw new Error(handleResponseError(response.status));
+        const errorText = await response.text();
+        throw new Error(errorText || 'request failed');
     }
 
     return response.json();
 };
 
 // API endpoints
-export const signup = (data: SignupData): Promise<void> =>
-    apiClient('/authentication/signup', {
+export const signup = async (data: SignupData): Promise<void> =>{
+    const response = await fetch(`${API_BASE_URL}/authentication/signup`, {
         method: 'POST',
-        body: data,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
     });
 
-export const signin = (data: SigninData): Promise<{ token: string }> =>
-    apiClient('/authentication/signin', {
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Signup failed');
+    }
+
+};
+export const signin = async (data: SigninData): Promise<{ token: string }> =>{
+    const response = await fetch(`${API_BASE_URL}/authentication/signin`, {
         method: 'POST',
-        body: data,
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(data),
     });
 
-export const verifyEmail = (verifyCode: string): Promise<{ redirect: string }> =>
-    apiClient(`/authentication/verify-email?verifyCode=${verifyCode}`);
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Signin failed');
+    }
+
+    return response.json();
+};
+
+export const verifyEmail = async (verifyCode: string): Promise<{ redirect: string }> => {
+    const response = await fetch(`${API_BASE_URL}/authentication/verify-email`, {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ verifyCode }),
+    });
+
+    if (!response.ok) {
+        const errorText = await response.text();
+        throw new Error(errorText || 'Verify email failed');
+    }
+
+    return response.json();
+};
+    
 
 export const getUserInfo = (token: string): Promise<UserProfileResponse> =>
-    apiClient('/user/profile', { token });
+    apiClient('/user/profile', token);
 
 export const getAccountBalance = (token: string, accountNumber: string): Promise<{ balance: number }> =>
-    apiClient(`/account/balance/${accountNumber}`, { token });
+    apiClient(`/account/balance/${accountNumber}`, token);
 
 export const getUserAccounts = (token: string): Promise<{ accounts: AccountResponse[] }> =>
-    apiClient('/user/accounts', { token });
+    apiClient('/user/accounts', token);
 
 export const createAccount = (token: string, initialBalance: number): Promise<CreateAccountResponse> =>
-    apiClient('/account/', {
+    apiClient('/account/', token, {
         method: 'POST',
-        token,
         body: { initialBalance },
     });
 
@@ -127,9 +164,8 @@ export const createTransaction = (
     token: string,
     transaction: Omit<Transaction, 'userId'>
 ): Promise<TransactionResponse> =>
-    apiClient('/transaction/create', {
+    apiClient('/transaction/create', token, {
         method: 'POST',
-        token,
         body: transaction,
     });
 
@@ -137,4 +173,4 @@ export const getTransactions = (
     token: string,
     accountId: string
 ): Promise<Transaction[]> =>
-    apiClient(`/transaction/list/${accountId}`, { token });
+    apiClient(`/transaction/list/${accountId}`,token);

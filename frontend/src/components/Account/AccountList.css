@@ -1,0 +1,25 @@
+/* src/components/Account/AccountList.css */
+.accounts-section {
+    margin: 20px 0;
+}
+
+.accounts-table {
+    width: 100%;
+    border-collapse: collapse;
+    background: white;
+    box-shadow: 0 2px 4px rgba(197, 13, 13, 0.1);
+    border-radius: 8px;
+}
+
+.accounts-table th,
+.accounts-table td {
+    padding: 12px;
+    text-align: left;
+    border-bottom: 1px solid #eee;
+}
+
+.accounts-table .balance {
+    text-align: right;
+    font-family: monospace;
+    font-weight: bold;
+}

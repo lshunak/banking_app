@@ -1,22 +1,18 @@
 import React from 'react';
-
-type UserData = {
-    username: string;
-    email: string;
-};
-
-const mockUser: UserData = {
-    username: "John Doe",
-    email: "john.doe@example.com",
-};
+import { useAuth } from '../../contexts/AuthContext';
+import './UserInfo.css';
 
 const UserInfo: React.FC = () => {
+    const { user } = useAuth();
+
+    if (!user) return null;
+
     return (
         <div className="user-info">
             <h2>Profile Information</h2>
             <div className="user-details">
-                <p><strong>Username:</strong> {mockUser.username}</p>
-                <p><strong>Email:</strong> {mockUser.email}</p>
+                <p><strong>Username:</strong> {user.username}</p>
+                <p><strong>Email:</strong> {user.email}</p>
             </div>
         </div>
     );
