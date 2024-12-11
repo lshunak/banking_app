@@ -15,7 +15,7 @@ const Dashboard: React.FC = () => {
 
     return (
         <div className="dashboard">
-            <h1>Welcome, {user.username}!</h1>
+            <h1>Welcome, {user.username} to Your Dashboard</h1>
             <UserInfo />
             <AccountList />
         </div>
