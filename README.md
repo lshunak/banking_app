@@ -1,2 +1,2 @@
 To run backend server:
-dockerdocker-compose up
+docker-compose up
