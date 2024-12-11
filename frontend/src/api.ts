@@ -19,6 +19,7 @@ export type SigninData = {
 
 
 export type UserProfileResponse = {
+    id: string;
     username: string;
     email: string;
 };
@@ -47,23 +48,8 @@ export type TransactionResponse = {
     message: string;
     transaction: Transaction;
 };
-/* 
-// Error handling helper
-const handleResponseError = (status: number): string => {
-    switch (status) {
-        case 400:
-            return 'Invalid request';
-        case 401:
-            return 'Unauthorized';
-        case 403:
-            return 'User not verified';
-        case 404:
-            return 'Not found';
-        default:
-            return 'Server error';
-    }
-};
- */
+
+
 // Base API client
 const apiClient = async <T>(
     endpoint: string,

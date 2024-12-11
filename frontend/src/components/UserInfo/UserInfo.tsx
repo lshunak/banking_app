@@ -9,9 +9,8 @@ const UserInfo: React.FC = () => {
 
     return (
         <div className="user-info">
-            <h2>Profile Information</h2>
+            <h2>User's Information</h2>
             <div className="user-details">
-                <p><strong>Username:</strong> {user.username}</p>
                 <p><strong>Email:</strong> {user.email}</p>
             </div>
         </div>
