@@ -1,15 +1,17 @@
 // tests/setup.js
-require('dotenv').config({
-  path: process.env.NODE_ENV === 'test' ? '.env.test' : '.env'
-});
 const mongoose = require('mongoose');
+const path = require('path');
+
+// Load environment variables based on NODE_ENV
+const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
+const envPath = path.resolve(__dirname, '..', envFile);
+require('dotenv').config({ path: envPath });
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGODB_TEST_URI || 'mongodb://localhost:27017/banking_test');
+  await mongoose.connect(process.env.MONGODB_URI);
 });
 
 afterAll(async () => {
-  await mongoose.connection.dropDatabase();
   await mongoose.connection.close();
 });
 
