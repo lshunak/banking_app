@@ -19,20 +19,30 @@ jobs:
           - 27017:27017
 
     steps:
-      - name: Checkout Code
-        uses: actions/checkout@v3
+      - uses: actions/checkout@v3
 
-      - name: Set Up Node.js
+      - name: Set up Node.js
         uses: actions/setup-node@v3
         with:
           node-version: '16'
 
-      - name: Install Dependencies
+      - name: Install dependencies
         run: |
           cd backend
           npm install
 
-      - name: Run Tests
+      - name: Create env file
         run: |
           cd backend
-          npm test
+          echo "MONGODB_URI=mongodb://localhost:27017/test_db" > .env.test
+          echo "EMAIL_HOST=smtp.example.com" >> .env.test
+          echo "EMAIL_PORT=587" >> .env.test
+          echo "EMAIL_USER=test@example.com" >> .env.test
+          echo "EMAIL_PASS=password123" >> .env.test
+
+      - name: Run tests
+        run: |
+          cd backend
+          NODE_ENV=test npm test
+        env:
+          MONGODB_URI: mongodb://localhost:27017/test_db
