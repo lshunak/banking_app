@@ -1,80 +1,95 @@
 import React, { useState } from 'react';
 import { useNavigate } from 'react-router-dom';
 import { signup } from '../../api'; // Import the signUp function from api.ts
+import { SignupData } from '../../api';
 import '../../App.css';
 
-const SignUpPage = () => {
-    const [formData, setFormData] = useState({
+const SignUpPage: React.FC = () => {
+    const [formData, setFormData] = useState<SignupData>({
         username: '',
-        password: '',
-        email: ''
+        email: '',
+        password: ''
     });
     const [error, setError] = useState('');
+    const [success, setSuccess] = useState('');
+    const [isLoading, setIsLoading] = useState(false);
     const navigate = useNavigate();
 
     const handleChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const { name, value } = e.target;
-        setFormData({
-            ...formData,
-            [name]: value
-        });
+        setFormData(prev => ({
+            ...prev,
+            [e.target.name]: e.target.value
+        }));
     };
 
     const handleSubmit = async (e: React.FormEvent) => {
         e.preventDefault();
+        setError('');
+        setSuccess('');
+        setIsLoading(true);
+
         try {
             await signup(formData);
-            navigate('/signin');
-        } catch (error) {
-            console.error('Error signing up:', error);
-            setError(  'An unexpected error occurred. Please try again.');
+            setSuccess('Account created successfully! Please check your email for verification.');
+            // Add delay before redirect to show success message
+            setTimeout(() => {
+                navigate('/signin');
+            }, 3000);
+        } catch (err) {
+            if (err instanceof Error) {
+                setError(err.message || 'Failed to create account');
+            } else {
+                setError('Failed to create account. Please try again.');
+            }
+            console.error('Signup error:', err);
+        } finally {
+            setIsLoading(false);
         }
     };
 
     return (
         <div className="container">
-            <header className="header">
-                <h1>Sign Up</h1>
-            </header>
-            <main className="main">
-                <form onSubmit={handleSubmit} className="form">
-                    <label>
-                        Username:
-                        <input
-                            type="text"
-                            name="username"
-                            value={formData.username}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Password:
-                        <input
-                            type="password"
-                            name="password"
-                            value={formData.password}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    <label>
-                        Email:
-                        <input
-                            type="email"
-                            name="email"
-                            value={formData.email}
-                            onChange={handleChange}
-                            required
-                        />
-                    </label>
-                    
-                    <button type="submit" className="button">
-                        Sign Up
-                    </button>
-                    {error && <p className="error-message">{error}</p>}
-                </form>
-            </main>
+            <h2>Sign Up</h2>
+            {success && <div className="success-message">{success}</div>}
+            {error && <div className="error-message">{error}</div>}
+            <form onSubmit={handleSubmit}>
+                <div>
+                    <label htmlFor="username">Username:</label>
+                    <input
+                        type="text"
+                        id="username"
+                        name="username"
+                        value={formData.username}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="email">Email:</label>
+                    <input
+                        type="email"
+                        id="email"
+                        name="email"
+                        value={formData.email}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <div>
+                    <label htmlFor="password">Password:</label>
+                    <input
+                        type="password"
+                        id="password"
+                        name="password"
+                        value={formData.password}
+                        onChange={handleChange}
+                        required
+                    />
+                </div>
+                <button type="submit" disabled={isLoading}>
+                    {isLoading ? 'Creating Account...' : 'Sign Up'}
+                </button>
+            </form>
         </div>
     );
 };

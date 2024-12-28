@@ -114,20 +114,23 @@ export const signin = async (data: SigninData): Promise<{ token: string }> =>{
 };
 
 export const verifyEmail = async (verifyCode: string): Promise<{ redirect: string }> => {
-    const response = await fetch(`${API_BASE_URL}/authentication/verify-email`, {
-        method: 'POST',
-        headers: {
-            'Content-Type': 'application/json',
-        },
-        body: JSON.stringify({ verifyCode }),
-    });
+    const response = await fetch(
+        `${API_BASE_URL}/authentication/verify-email?verifyCode=${verifyCode}`, 
+        {
+            method: 'GET',
+            headers: {
+                'Content-Type': 'application/json',
+            }
+        }
+    );
+
+    const data = await response.json();
 
     if (!response.ok) {
-        const errorText = await response.text();
-        throw new Error(errorText || 'Verify email failed');
+        throw new Error(data.message );
     }
 
-    return response.json();
+    return data;
 };
     
 

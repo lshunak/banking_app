@@ -12,7 +12,6 @@ exports.signup = async (req, res) => {
     const hashedPassword = await bcrypt.hash(password, 10);
     
     try {
-
         // Create a new user with verification code and expiry
         const newUser = new User({
             username,
@@ -25,7 +24,7 @@ exports.signup = async (req, res) => {
         await newUser.save();
 
         // Send verification email
-        sendVerificationEmail(newUser);
+        await sendVerificationEmail(newUser.email, newUser.verificationCode);
 
         await createAccountForUser(newUser._id, 1000);
 
@@ -89,18 +88,18 @@ exports.signin = async (req, res) => {
         });
         
     } catch (error) {
-        console.error('Signin error:', error);
         res.status(500).json({ message: 'Server error', error });
     }
 };
 
 // Verify email function
 exports.verifyEmail = async (req, res) => {
-
     const { verifyCode } = req.query;
 
     try {
-        // Decode and verify the token
+        if (!verifyCode) {
+            return res.status(400).json({ message: 'Verification code is required' });
+        }
         const user = await User.findOne({ verificationCode: verifyCode });
 
         if (!user) {
@@ -112,9 +111,9 @@ exports.verifyEmail = async (req, res) => {
         user.verificationCode = undefined;
         await user.save();
 
-        res.status(200).json({ redirect: '/signin' });
+        return res.status(200).json({ message: 'Email verified successfully' });
 
     } catch (error) {
-        res.status(500).json({ message: 'Server error'});
+        return res.status(500).json({ message: 'Server error'});
     }
 };
