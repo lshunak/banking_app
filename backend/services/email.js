@@ -20,6 +20,10 @@ const generateVerificationCode = () => {
 // Function to send the verification email
 const sendVerificationEmail = async (email, verificationCode) => {
 
+    if (process.env.NODE_ENV === 'test') {
+        return true; // Skip actual email sending in test environment
+      }
+      
     const verificationLink = `http://localhost:5050/verify-email?verifyCode=${verificationCode}`;
     
     const mailOptions = {
