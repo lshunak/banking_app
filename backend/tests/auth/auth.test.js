@@ -1,6 +1,6 @@
 const request = require('supertest');
 const { app } = require('../../app');
-require('../mocks/emailService');
+require('../mocks/emailServices');
 
 jest.setTimeout(30000); // Increase timeout
 
