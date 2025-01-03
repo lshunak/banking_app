@@ -1,11 +1,11 @@
 const { Schema, default:mongoose } = require('mongoose');
 
 const userSchema = new Schema({
-    email: { type: String, required: true, unique: true },
     username: { type: String, required: true },
     password: { type: String, required: true }, 
-    isVerified: { type: Boolean, default: false },
+    email: { type: String, required: true, unique: true },
     verificationCode: { type: String }, // Store verification code
+    isVerified: { type: Boolean, default: false },
     accounts: [{ type: Schema.Types.ObjectId, ref: 'Account' }]
 
     /*

@@ -1,14 +1,13 @@
 // tests/setup.js
 const mongoose = require('mongoose');
 const path = require('path');
-
-// Load environment variables based on NODE_ENV
-const envFile = process.env.NODE_ENV === 'test' ? '.env.test' : '.env';
-const envPath = path.resolve(__dirname, '..', envFile);
-require('dotenv').config({ path: envPath });
+require('dotenv').config({ path: path.resolve(__dirname, '..', '.env.test') });
 
 beforeAll(async () => {
-  await mongoose.connect(process.env.MONGODB_URI);
+  await mongoose.connect(process.env.MONGODB_URI, {
+    useNewUrlParser: true,
+    useUnifiedTopology: true,
+  });
 });
 
 afterAll(async () => {

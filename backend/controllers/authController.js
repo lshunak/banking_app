@@ -1,6 +1,6 @@
 const jwt = require('jsonwebtoken');
 const bcrypt = require('bcryptjs');
-const User = require('../models/user');
+const { User } = require('../models/user'); // Ensure correct path to User model
 const { sendVerificationEmail, generateVerificationCode } = require('../services/email');
 const { createAccountForUser } = require('../services/accountService'); // Import account utility
 
@@ -22,6 +22,7 @@ exports.signup = async (req, res) => {
         });
         
         await newUser.save();
+        console.log('User saved:', newUser); // Add logging
 
         // Send verification email
         if (process.env.NODE_ENV !== 'test') {
@@ -33,6 +34,7 @@ exports.signup = async (req, res) => {
         res.status(200).json({ message: 'Signup successful! Please verify your email.'});
         
     } catch (error) {
+        console.error('Signup error:', error); // Add logging
         
         if (error.code === 11000) {
             return res.status(400).json({ message: 'email already exist' });
@@ -105,6 +107,7 @@ exports.verifyEmail = async (req, res) => {
         const user = await User.findOne({ verificationCode: verifyCode });
 
         if (!user) {
+            console.log('User not found for verification code:', verifyCode); // Add logging
             return res.status(404).json({ message: 'User not found' });
         }
 
@@ -112,10 +115,12 @@ exports.verifyEmail = async (req, res) => {
         user.isVerified = true;
         user.verificationCode = undefined;
         await user.save();
+        console.log('User verified:', user); // Add logging
 
         return res.status(200).json({ message: 'Email verified successfully' });
 
     } catch (error) {
+        console.error('Verification error:', error); // Add logging
         return res.status(500).json({ message: 'Server error'});
     }
 };

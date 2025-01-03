@@ -1,8 +1,9 @@
 const request = require('supertest');
 const { app } = require('../../app');
-require('../mocks/emailServices');
+require('../mocks/emailServices'); // Ensure correct path
+require('../setup'); // Ensure database connection
 
-jest.setTimeout(30000); // Increase timeout
+jest.setTimeout(30000);
 
 describe('Authentication Endpoints', () => {
   describe('POST /authentication/signup', () => {
@@ -17,13 +18,13 @@ describe('Authentication Endpoints', () => {
 
       expect(response.status).toBe(200);
       expect(response.body).toHaveProperty('message', 'Signup successful! Please verify your email.');
-    }, 10000); // Add timeout per test
+    }, 10000);
   });
 
   describe('POST /authentication/signin', () => {
     it('should authenticate user and return token', async () => {
       // Create and verify user first
-      const user = await request(app)
+      const signupResponse = await request(app)
         .post('/authentication/signup')
         .send({
           username: 'liran',
@@ -31,15 +32,30 @@ describe('Authentication Endpoints', () => {
           password: '123'
         });
 
-      const response = await request(app)
+      expect(signupResponse.status).toBe(200);
+      console.log('Signup response:', signupResponse.body); // Add logging
+
+      // Simulate email verification
+      const verifyResponse = await request(app)
+        .get('/authentication/verify-email')
+        .query({ verifyCode: '123456' });
+
+      console.log('Verify response:', verifyResponse.body); // Add logging
+
+      expect(verifyResponse.status).toBe(200);
+
+      // Attempt to sign in
+      const signinResponse = await request(app)
         .post('/authentication/signin')
         .send({
           username: 'liran',
           password: '123'
         });
 
-      expect(response.status).toBe(200);
-      expect(response.body).toHaveProperty('token');
+      console.log('Signin response:', signinResponse.body); // Add logging
+
+      expect(signinResponse.status).toBe(200);
+      expect(signinResponse.body).toHaveProperty('token');
     }, 10000);
   });
 });

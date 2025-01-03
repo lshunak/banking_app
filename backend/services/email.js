@@ -21,6 +21,7 @@ const generateVerificationCode = () => {
 const sendVerificationEmail = async (email, verificationCode) => {
 
     if (process.env.NODE_ENV === 'test') {
+        console.log('Generated verification code:', verificationCode); // Add logging
         return true; // Skip actual email sending in test environment
       }
       
