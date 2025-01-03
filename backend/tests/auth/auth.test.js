@@ -1,6 +1,6 @@
 const request = require('supertest');
 const { app } = require('../../app');
-require('../mocks/emailServices');
+require('../mocks/emailService');
 
 jest.setTimeout(30000); // Increase timeout
 
@@ -22,8 +22,8 @@ describe('Authentication Endpoints', () => {
 
   describe('POST /authentication/signin', () => {
     it('should authenticate user and return token', async () => {
-      // First create a user
-      await request(app)
+      // Create and verify user first
+      const user = await request(app)
         .post('/authentication/signup')
         .send({
           username: 'liran',
@@ -31,13 +31,6 @@ describe('Authentication Endpoints', () => {
           password: '123'
         });
 
-      // Verify the user (mock verification)
-      const User = require('../../models/user');
-      const user = await User.findOne({ email: 'liranshunak@gmail.com' });
-      user.isVerified = true;
-      await user.save();
-
-      // Then try to sign in
       const response = await request(app)
         .post('/authentication/signin')
         .send({
