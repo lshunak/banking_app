@@ -44,7 +44,8 @@ jobs:
       - name: Create env file
         run: |
           cd backend
-          echo "MONGODB_URI=mongodb://localhost:27017/test_db" > .env.test
+          echo "NODE_ENV=test" > .env.test
+          echo "MONGODB_URI=mongodb://localhost:27017/test_db" >> .env.test
           echo "EMAIL_HOST=smtp.example.com" >> .env.test
           echo "EMAIL_PORT=587" >> .env.test
           echo "EMAIL_USER=test@example.com" >> .env.test

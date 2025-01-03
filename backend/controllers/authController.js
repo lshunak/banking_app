@@ -24,7 +24,9 @@ exports.signup = async (req, res) => {
         await newUser.save();
 
         // Send verification email
-        await sendVerificationEmail(newUser.email, newUser.verificationCode);
+        if (process.env.NODE_ENV !== 'test') {
+            await sendVerificationEmail(newUser.email, newUser.verificationCode);
+        }
 
         await createAccountForUser(newUser._id, 1000);
 
